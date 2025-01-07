@@ -8,4 +8,5 @@ import (
 
 func ClientRoutes(e *echo.Echo) {
 	e.GET("/clients/:id", ClientsController.GetClientByID) // Obtener cliente mediante el ID
+	e.GET("/clients", ClientsController.GetAllClients)     // Obtener todos los clientes
 }

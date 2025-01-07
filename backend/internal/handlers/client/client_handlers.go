@@ -10,9 +10,14 @@ import (
 
 // ResponseMessage estructura de respuesta
 type ResponseMessage struct {
-	Status  string `json:"status"`
-	Data    any    `json:"data,omitempty"`
-	Message string `json:"message,omitempty"`
+	Status       string        `json:"status"`
+	Data         any           `json:"data,omitempty"`
+	TotalClients *TotalClients `json:"totalclients,omitempty"`
+	Message      string        `json:"message,omitempty"`
+}
+
+type TotalClients struct {
+	Total int `json:"totalclients,omitempty"`
 }
 
 // GetClientByID obtiene un cliente mediante su ID
@@ -32,5 +37,23 @@ func GetClientByID(c echo.Context) error {
 	return c.JSON(http.StatusOK, ResponseMessage{
 		Status: "success",
 		Data:   client,
+	})
+}
+
+// GetAllClients obtiene todos los clientes
+func GetAllClients(c echo.Context) error {
+	clients, err := clients_services.GetAllClients() // Obtener todos los clientes
+	if err != nil {
+		return c.JSON(http.StatusNotFound, "Clients not found")
+	}
+
+	clientsTotal := TotalClients{ // Total de clientes
+		Total: len(clients),
+	}
+
+	return c.JSON(http.StatusOK, ResponseMessage{
+		Status:       "success",
+		Data:         clients,       // Datos de los clientes
+		TotalClients: &clientsTotal, // Total de clientes
 	})
 }
