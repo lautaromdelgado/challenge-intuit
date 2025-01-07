@@ -29,12 +29,16 @@ CREATE TABLE clientes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_nombres_apellidos INT UNIQUE,
     fecha_de_nacimiento DATE NOT NULL,
-    cuit VARCHAR(11) NOT NULL,
+    cuit BIGINT NOT NULL,
     id_domicilio INT UNIQUE,
-    telefono VARCHAR(20) NOT NULL,
+    telefono VARCHAR(20) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
     FOREIGN KEY (id_nombres_apellidos) REFERENCES nombres_apellidos_client(id),
     FOREIGN KEY (id_domicilio) REFERENCES domicilio(id)
 );
+
+-- AGREGAR COLUMNA DE ALTA Y BAJA
+ALTER TABLE clientes ADD COLUMN creado_el TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE clientes ADD COLUMN eliminado_el TIMESTAMP DEFAULT NULL;
 
 /* DESARROLLADO POR LAUTARO DELGADO */
