@@ -79,6 +79,47 @@ backend/
 
 ### **Clientes**
 
+#### **Buscar clientes por nombre**
+- **URL:** `/clients/search`
+- **Método:** `GET`
+- **Descripción:** Busca clientes cuyo nombre o apellido coincidan parcialmente con el parámetro de búsqueda proporcionado.
+- **Query Param:**
+  - `name`: Texto a buscar en los nombres o apellidos.
+- **Ejemplo:**
+  ```
+  GET /clients/search?name=Juan
+  ```
+- **Respuesta:**
+  ```json
+  {
+    "status": "success",
+    "data": [
+      {
+        "id": 1,
+        "nombres_apellidos": {
+          "first_name": "Juan",
+          "second_name": "Carlos",
+          "first_surname": "Pérez",
+          "second_surname": "García"
+        },
+        "fecha_de_nacimiento": "1990-05-15",
+        "cuit": "20-12345678-9",
+        "domicilio": {
+          "calle": "Figueroa Alcorta",
+          "numero": "4880",
+          "ciudad": "Autonoma de Buenos Aires",
+          "provincia": "Buenos Aires",
+          "codigo_postal": "S100",
+          "pais": "Argentina"
+        },
+        "telefono": "1234567890",
+        "email": "juan.perez@example.com",
+        "creado_el": "2025-01-01T12:00:00Z"
+      }
+    ]
+  }
+  ```
+
 #### **Obtener un cliente por ID**
 - **URL:** `/clients/:id`
 - **Método:** `GET`
