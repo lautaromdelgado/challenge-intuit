@@ -1,94 +1,194 @@
-# Challenge Intuit
+# Challenge Intuit Backend
 
-Este es un proyecto de ejemplo para la gestión de clientes utilizando el framework **Echo** en Go.
+Este proyecto es un backend desarrollado en **Golang** con el framework **Echo** y utiliza **GORM** como ORM para la interacción con la base de datos MySQL. El propósito del sistema es gestionar clientes, incluyendo sus domicilios y nombres completos, mediante un conjunto de endpoints RESTful.
 
-## Requisitos
+## **Tecnologías utilizadas**
 
-Antes de comenzar, asegúrate de tener instalados los siguientes requisitos:
+- **Lenguaje:** Go (Golang)
+- **Framework:** Echo
+- **ORM:** GORM
+- **Base de datos:** MySQL
+- **Gestión de dependencias:** Go Modules
 
-- **Go** 1.16 o superior.
-- **Git**.
-
-## Instalación
-
-Sigue los pasos a continuación para clonar el repositorio, instalar las dependencias y ejecutar el proyecto.
-
-### Clonar el repositorio
-
-Abre una terminal y ejecuta los siguientes comandos:
-
-```bash
-# Clonar el repositorio
-git clone https://github.com/tu-usuario/challenge-intuit.git
-
-# Acceder al directorio del proyecto
-cd challenge-intuit
-```
-
-### Instalar dependencias
-
-Ejecuta el siguiente comando para instalar las dependencias necesarias:
-
-```bash
-go mod tidy
-```
-
-### Ejecutar el servidor
-
-Finalmente, ejecuta el siguiente comando para iniciar el servidor:
-
-```bash
-go run server.go
-```
-
-## Estructura del proyecto
-
-El proyecto está organizado de la siguiente manera:
+## **Estructura del proyecto**
 
 ```
-internal/
-├── handlers/
-│   └── client/              # Controladores para manejar las solicitudes relacionadas con los clientes
-├── models/
-│   ├── clients/             # Modelos de datos para los clientes
-│   ├── domicilio/           # Modelos de datos para los domicilios
-│   └── nombres_apellidos/   # Modelos de datos para los nombres y apellidos
-├── repositories/
-│   └── client/              # Repositorios para interactuar con la base de datos
-├── services/
-│   └── client/              # Servicios para la lógica de negocio relacionada con los clientes
-└── routes/                  # Definición de las rutas de la API
+backend/
+├── cmd
+│   └── server.go              # Inicialización del servidor Echo
+├── config
+│   └── .env                   # Archivo de configuración de variables de entorno
+├── database
+│   ├── script
+│   │   └── database.go        # Conexión y configuración de la base de datos
+├── internal
+│   ├── handlers
+│   │   └── client
+│   │       └── client_handlers.go  # Controladores para manejar las solicitudes
+│   ├── models
+│   │   ├── clients
+│   │   │   └── clients_models.go   # Modelos de clientes
+│   │   ├── domicilio
+│   │   │   └── domicilio_models.go # Modelos de domicilio
+│   │   └── nombres_apellidos
+│   │       └── nombres_apellidos_models.go  # Modelos de nombres y apellidos
+│   ├── repositories
+│   │   └── client
+│   │       └── client_repositories.go  # Repositorios para acceso a la base de datos
+│   ├── services
+│   │   └── client
+│   │       └── client_services.go      # Lógica de negocio y servicios
+│   └── utils
+│       └── utils.go                # Funciones auxiliares (validaciones)
+├── routes
+│   └── routes.go                  # Definición de rutas del servidor
+└── go.mod                         # Archivo de módulos de Go
 ```
 
-## Rutas de la API
+## **Instalación y ejecución**
 
-### Clientes
+1. **Clonar el repositorio:**
+   ```bash
+   git clone <URL_DEL_REPOSITORIO>
+   cd backend
+   ```
 
-- **GET** `/clients/:id`: Obtener un cliente mediante el ID.
-- **GET** `/clients`: Obtener todos los clientes.
-- **POST** `/clients/create`: Crear un nuevo cliente.
+2. **Configurar las variables de entorno:**
+   Crea un archivo `.env` en la carpeta `config` con el siguiente contenido:
+   ```env
+   DB_USER=<usuario_db>
+   DB_PASSWORD=<password_db>
+   DB_NAME=<nombre_db>
+   DB_HOST=<host_db>
+   DB_PORT=<puerto_db>
+   ```
 
-### Ejemplo de JSON para crear un cliente
+3. **Instalar las dependencias:**
+   ```bash
+   go mod tidy
+   ```
 
-A continuación se muestra un ejemplo de cómo debe ser el JSON enviado para crear un cliente:
+4. **Ejecutar el servidor:**
+   ```bash
+   go run cmd/server.go
+   ```
 
+   El servidor estará disponible en `http://localhost:8080`.
+
+## **Endpoints disponibles**
+
+### **Clientes**
+
+#### **Obtener un cliente por ID**
+- **URL:** `/clients/:id`
+- **Método:** `GET`
+- **Descripción:** Obtiene un cliente específico mediante su ID.
+
+#### **Obtener todos los clientes**
+- **URL:** `/clients`
+- **Método:** `GET`
+- **Descripción:** Devuelve una lista de todos los clientes registrados.
+
+#### **Crear un cliente**
+- **URL:** `/clients/create`
+- **Método:** `POST`
+- **Descripción:** Crea un nuevo cliente.
+- **Body:**
+  ```json
+  {
+    "nombres_apellidos": {
+      "first_name": "Juan",
+      "second_name": "",
+      "first_surname": "Pérez",
+      "second_surname": ""
+    },
+    "fecha_de_nacimiento": "1990-05-15",
+    "cuit": "20-12345678-9",
+    "domicilio": {
+      "calle": "Figueroa Alcorta",
+      "numero": "4880",
+      "ciudad": "Autonoma de Buenos Aires",
+      "provincia": "Buenos Aires",
+      "codigo_postal": "S100",
+      "pais": "Argentina"
+    },
+    "telefono": "1234567890",
+    "email": "juan.perez@example.com"
+  }
+  ```
+
+#### **Actualizar un cliente**
+- **URL:** `/clients/update/:id`
+- **Método:** `PUT`
+- **Descripción:** Actualiza un cliente específico mediante su ID.
+- **Body:** (Ejemplo con algunos campos actualizados)
+  ```json
+  {
+    "nombres_apellidos": {
+      "first_name": "Carlos",
+      "first_surname": "Gómez"
+    },
+    "telefono": "9876543210"
+  }
+  ```
+
+#### **Respuestas posibles**
+- **200 OK:** Cliente actualizado correctamente.
+- **400 Bad Request:** Error en los datos enviados o el cliente no existe.
+
+## **Funciones auxiliares (utils)**
+
+Las funciones auxiliares en `utils/utils.go` verifican si las estructuras anidadas están vacías antes de proceder a actualizarlas:
+
+- `IsEmptyDomicilio`: Verifica si los campos de la estructura `Domicilio` están vacíos.
+- `IsEmptyNombresApellidos`: Verifica si los campos de la estructura `NombresApellidos` están vacíos.
+
+## **Pruebas**
+Para probar el funcionamiento del backend, se recomienda utilizar herramientas como **Postman** o **cURL**. Se incluyen tres ejemplos de JSON para pruebas:
+
+### **1. JSON con todos los campos**
 ```json
 {
   "nombres_apellidos": {
-    "first_name": "Victoria",
-    "first_surname": "Boll"
+    "first_name": "Ana",
+    "first_surname": "López"
   },
-  "fecha_de_nacimiento": "1990-01-01",
-  "cuit": "25441770607",
+  "fecha_de_nacimiento": "1985-03-20",
+  "cuit": "23-98765432-1",
   "domicilio": {
-    "calle": "Gordibuena",
-    "numero": "4",
-    "ciudad": "Resistencia",
-    "provincia": "Chaco",
-    "codigo_postal": "S355",
+    "calle": "Av. Libertador",
+    "numero": "1010",
+    "ciudad": "Autonoma de Buenos Aires",
+    "provincia": "Buenos Aires",
+    "codigo_postal": "C100",
     "pais": "Argentina"
   },
-  "telefono": "348012347",
-  "email": "VickiBoll@gmail.com"
+  "telefono": "1122334455",
+  "email": "ana.lopez@example.com"
 }
 ```
+
+### **2. JSON con pocos cambios**
+```json
+{
+  "telefono": "1231231234"
+}
+```
+
+### **3. JSON con algunos campos actualizados**
+```json
+{
+  "nombres_apellidos": {
+    "first_name": "Luis",
+    "first_surname": "Martínez"
+  },
+  "domicilio": {
+    "calle": "San Martín",
+    "numero": "505"
+  }
+}
+```
+
+## **Licencia**
+Este proyecto está desarrollado por www.linkedin.com/in/lautaromdelgado.
+
