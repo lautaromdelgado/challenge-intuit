@@ -128,7 +128,8 @@ backend/
 #### **Obtener todos los clientes**
 - **URL:** `/clients`
 - **Método:** `GET`
-- **Descripción:** Devuelve una lista de todos los clientes registrados.
+- **Descripción:** Devuelve una lista de todos los clientes registrados que no han sido eliminados.
+- **Detalles de implementación:** Se ha implementado un filtro en la base de datos que excluye a los clientes eliminados, es decir, aquellos cuyo campo `eliminado_el` no es nulo.
 
 #### **Crear un cliente**
 - **URL:** `/clients/create`
@@ -176,17 +177,10 @@ backend/
 #### **Eliminar un cliente**
 - **URL:** `/clients/delete/:id`
 - **Método:** `PUT`
-- **Descripción:** Elimina un cliente de manera lógica, marcando el campo `eliminado_el` con la fecha y hora actual.
-- **Respuesta:**
-  ```json
-  {
-    "status": "success",
-    "message": "Client deleted successfully"
-  }
-  ```
+- **Descripción:** Elimina un cliente de manera lógica estableciendo la fecha actual en el campo `eliminado_el`. Esto indica que la cuenta ha sido dada de baja pero permanece en el sistema para propósitos de historial.
 
 #### **Respuestas posibles**
-- **200 OK:** Operación realizada correctamente.
+- **200 OK:** Cliente actualizado o eliminado correctamente.
 - **400 Bad Request:** Error en los datos enviados o el cliente no existe.
 
 ## **Funciones auxiliares (utils)**

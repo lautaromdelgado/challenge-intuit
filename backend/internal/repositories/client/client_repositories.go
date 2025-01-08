@@ -23,7 +23,7 @@ func GetClientByID(clientid uint) (*clients_models.Client, error) {
 func GetAllClients() ([]clients_models.Client, error) {
 	clients := []clients_models.Client{}
 	db := database.GetDB()
-	if err := db.Preload("Domicilio").Preload("NombresApellidos").Find(&clients).Error; err != nil {
+	if err := db.Preload("Domicilio").Preload("NombresApellidos").Where("eliminado_el IS NULL").Find(&clients).Error; err != nil {
 		return nil, err
 	}
 	return clients, nil
