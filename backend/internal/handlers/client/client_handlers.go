@@ -57,3 +57,18 @@ func GetAllClients(c echo.Context) error {
 		TotalClients: &clientsTotal, // Total de clientes
 	})
 }
+
+// CreateClient crea un cliente
+func CreateClient(c echo.Context) error {
+	if err := clients_services.CreateClient(c); err != nil { // Crear un cliente
+		return c.JSON(http.StatusBadRequest, ResponseMessage{
+			Status:  "error",
+			Message: "Error creating client: " + err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusCreated, ResponseMessage{ // Respuesta
+		Status:  "success",
+		Message: "Client created successfully",
+	})
+}

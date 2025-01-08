@@ -1,6 +1,6 @@
 package nombres_apellidos_models
 
-// NombresApellidos es la estructura de un nombre y apellido
+// NombresApellidos es la estructura de un nombre y apellido con validación
 type NombresApellidos struct {
 	ID             uint   `json:"id" gorm:"primaryKey"`
 	First_name     string `json:"first_name"`

@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-// Client es la estructura de un cliente
+// Client es la estructura de un cliente con validación
 type Client struct {
 	ID                   uint                                      `json:"id" gorm:"primaryKey"`
 	ID_Nombres_Apellidos uint                                      `json:"id_nombres_apellidos"`
@@ -17,7 +17,7 @@ type Client struct {
 	Domicilio            domicilio.Domicilio                       `json:"domicilio" gorm:"foreignKey:ID_Domicilio;references:ID"`
 	Telefono             string                                    `json:"telefono"`
 	Email                string                                    `json:"email"`
-	Creado_el            *time.Time                                `json:"registrado_el"`
+	Creado_el            *time.Time                                `json:"registrado_el,omitempty" gorm:"autoCreateTime"`
 	Eliminado_el         *time.Time                                `json:"eliminado_el,omitempty"`
 }
 

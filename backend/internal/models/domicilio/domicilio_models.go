@@ -1,6 +1,6 @@
 package domicilio_models
 
-// Domicilio es la estructura de un domicilio
+// Domicilio es la estructura de un domicilio con validación
 type Domicilio struct {
 	ID            uint   `json:"id" gorm:"primaryKey"`
 	Calle         string `json:"calle"`
