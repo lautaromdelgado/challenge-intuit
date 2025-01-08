@@ -23,7 +23,7 @@ type ResponseMessage struct {
 
 // GetClientByID obtiene un cliente mediante el ID
 func GetClientByID(clientid uint) (*clients_models.Client, error) {
-	client, err := clients.GetClientByID(clientid)
+	client, err := clients.GetClientByID(clientid) // Obtener el cliente
 	if err != nil {
 		return nil, err
 	}
@@ -32,7 +32,7 @@ func GetClientByID(clientid uint) (*clients_models.Client, error) {
 
 // GetAllClients obtiene todos los clientes
 func GetAllClients() ([]clients_models.Client, error) {
-	clients, err := clients.GetAllClients()
+	clients, err := clients.GetAllClients() // Obtener todos los clientes
 	if err != nil {
 		return nil, err
 	}
@@ -52,20 +52,17 @@ func CreateClient(c echo.Context) error {
 	log.Printf("Request recibido: %+v\n", req)                       // Imprime la estructura completa
 	log.Printf("Fecha de nacimiento: %v\n", req.Fecha_de_nacimiento) // Imprime la fecha específicamente
 
-	// Crear el domicilio
-	newDomicilio, err := CreateDomicilio(&req.Domicilio)
+	newDomicilio, err := CreateDomicilio(&req.Domicilio) // Crear el domicilio
 	if err != nil {
 		return err
 	}
 
-	// Crear el nombre y apellido
-	newNombresApellidos, err := CreateNombresApellidos(&req.NombresApellidos)
+	newNombresApellidos, err := CreateNombresApellidos(&req.NombresApellidos) // Crear el nombre y apellido
 	if err != nil {
 		return err
 	}
 
-	// Crear el cliente
-	newClient := clients_models.Client{
+	newClient := clients_models.Client{ // Estructura del cliente
 		ID_Nombres_Apellidos: newNombresApellidos.ID,
 		ID_Domicilio:         newDomicilio.ID,
 		Fecha_de_nacimiento:  req.Fecha_de_nacimiento,
@@ -74,8 +71,7 @@ func CreateClient(c echo.Context) error {
 		Email:                req.Email,
 	}
 
-	// Crear el cliente
-	err = clients.CreateClient(&newClient)
+	err = clients.CreateClient(&newClient) // Crear el cliente
 	if err != nil {
 		return err
 	}
@@ -85,8 +81,7 @@ func CreateClient(c echo.Context) error {
 
 // CreateDomicilio crea un domicilio
 func CreateDomicilio(domicilio *domicilio_models.Domicilio) (*domicilio_models.Domicilio, error) {
-	// Crear el domicilio
-	err := clients.CreateDomicilio(domicilio)
+	err := clients.CreateDomicilio(domicilio) // Crear el domicilio
 	if err != nil {
 		return nil, err
 	}
@@ -96,8 +91,7 @@ func CreateDomicilio(domicilio *domicilio_models.Domicilio) (*domicilio_models.D
 
 // CreateNombresApellidos crea un nombre y apellido
 func CreateNombresApellidos(nombresApellidos *nombres_apellidos_models.NombresApellidos) (*nombres_apellidos_models.NombresApellidos, error) {
-	// Crear el nombre y apellido
-	err := clients.CreateNombreApellido(nombresApellidos)
+	err := clients.CreateNombreApellido(nombresApellidos) // Crear el nombre y apellido
 	if err != nil {
 		return nil, err
 	}
@@ -106,7 +100,7 @@ func CreateNombresApellidos(nombresApellidos *nombres_apellidos_models.NombresAp
 
 // UpdateClient actualiza un cliente
 func UpdateClient(c echo.Context) error {
-	idParam := c.Param("id")
+	idParam := c.Param("id")         // Obtener el ID del cliente
 	id, err := strconv.Atoi(idParam) // Convertir el ID a entero
 	if err != nil {
 		return err
@@ -174,6 +168,7 @@ func UpdateClient(c echo.Context) error {
 		}
 	}
 
+	// Actualizar el cliente
 	if clientNew.Fecha_de_nacimiento != nil {
 		clientDB.Fecha_de_nacimiento = clientNew.Fecha_de_nacimiento
 	}
@@ -197,8 +192,7 @@ func UpdateClient(c echo.Context) error {
 
 // UpdateDomicilio actualiza un domicilio
 func UpdateDomicilio(id uint, domicilio *domicilio_models.Domicilio) error {
-	// Actualizar el domicilio
-	err := clients.UpdateDomicilio(id, domicilio)
+	err := clients.UpdateDomicilio(id, domicilio) // Actualizar el domicilio
 	if err != nil {
 		return err
 	}
@@ -207,7 +201,7 @@ func UpdateDomicilio(id uint, domicilio *domicilio_models.Domicilio) error {
 
 // UpdateNombresApellidos actualiza un nombre y apellido
 func UpdateNombresApellidos(id uint, nombresApellidos *nombres_apellidos_models.NombresApellidos) error {
-	err := clients.UpdateNombreApellido(id, nombresApellidos)
+	err := clients.UpdateNombreApellido(id, nombresApellidos) // Actualizar el nombre y apellido
 	if err != nil {
 		return err
 	}
@@ -216,11 +210,11 @@ func UpdateNombresApellidos(id uint, nombresApellidos *nombres_apellidos_models.
 
 // SearchClientByName busca un cliente por nombre
 func SearchClient(c echo.Context) ([]clients_models.Client, error) {
-	search := c.QueryParam("name")
-	if search == "" {
+	search := c.QueryParam("name") // Obtener el nombre a buscar
+	if search == "" {              // Si no se ha ingresado un nombre
 		return nil, errors.New("No se ha ingresado un nombre para buscar")
 	}
-	clients, err := clients.SearchClients(search)
+	clients, err := clients.SearchClients(search) // Buscar el cliente
 	if err != nil {
 		return nil, err
 	}

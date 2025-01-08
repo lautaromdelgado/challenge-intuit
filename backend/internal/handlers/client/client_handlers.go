@@ -17,7 +17,7 @@ type ResponseMessage struct {
 }
 
 type TotalClients struct {
-	Total int `json:"totalclients,omitempty"`
+	Total int `json:"totalclients,omitempty"` // Total de clientes
 }
 
 // GetClientByID obtiene un cliente mediante su ID
@@ -90,7 +90,7 @@ func UpdateClient(c echo.Context) error {
 
 // SearchClients busca clientes
 func SearchClients(c echo.Context) error {
-	clients, err := clients_services.SearchClient(c)
+	clients, err := clients_services.SearchClient(c) // Buscar clientes
 	if err != nil {
 		return c.JSON(http.StatusNotFound, ResponseMessage{
 			Status:  "error",
