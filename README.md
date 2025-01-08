@@ -73,7 +73,7 @@ backend/
    go run cmd/server.go
    ```
 
-   El servidor estará disponible en `http://localhost:8080`.
+   El servidor estará disponible en `http://localhost:7001`.
 
 ## **Endpoints disponibles**
 
