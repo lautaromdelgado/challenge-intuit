@@ -83,3 +83,18 @@ func UpdateNombreApellido(id uint, nombreApellido *nombres_apellido.NombresApell
 	}
 	return nil
 }
+
+// SearchClients busca clientes
+func SearchClients(search string) ([]clients_models.Client, error) {
+	db := database.GetDB()
+
+	clients := []clients_models.Client{}
+	if err := db.Preload("NombresApellidos").Preload("Domicilio").
+		Joins("JOIN nombres_apellidos_client ON clientes.id_nombres_apellidos = nombres_apellidos_client.id").
+		Where("nombres_apellidos_client.first_name LIKE ? OR nombres_apellidos_client.second_name LIKE ? OR nombres_apellidos_client.first_surname LIKE ? OR nombres_apellidos_client.second_surname LIKE ?",
+			"%"+search+"%", "%"+search+"%", "%"+search+"%", "%"+search+"%").
+		Find(&clients).Error; err != nil {
+		return nil, err
+	}
+	return clients, nil
+}

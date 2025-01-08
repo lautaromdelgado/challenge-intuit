@@ -87,3 +87,24 @@ func UpdateClient(c echo.Context) error {
 		Message: "Client updated successfully",
 	})
 }
+
+// SearchClients busca clientes
+func SearchClients(c echo.Context) error {
+	clients, err := clients_services.SearchClient(c)
+	if err != nil {
+		return c.JSON(http.StatusNotFound, ResponseMessage{
+			Status:  "error",
+			Message: "Clients not found: " + err.Error(),
+		})
+	}
+
+	clientsTotal := TotalClients{ // Total de clientes
+		Total: len(clients),
+	}
+
+	return c.JSON(http.StatusOK, ResponseMessage{
+		Status:       "success",
+		Data:         clients,
+		TotalClients: &clientsTotal,
+	})
+}

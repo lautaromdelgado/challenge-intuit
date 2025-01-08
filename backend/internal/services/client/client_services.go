@@ -6,6 +6,7 @@ import (
 	nombres_apellidos_models "challenge-intuit/internal/models/nombres_apellidos" // Importar el modelo de nombres y apellidos
 	clients "challenge-intuit/internal/repositories/client"                       // Importar el repositorio de clientes
 	utils "challenge-intuit/utils"                                                // Importar el paquete de utilidades
+	"errors"
 
 	"log"
 	"strconv"
@@ -211,4 +212,17 @@ func UpdateNombresApellidos(id uint, nombresApellidos *nombres_apellidos_models.
 		return err
 	}
 	return nil
+}
+
+// SearchClientByName busca un cliente por nombre
+func SearchClient(c echo.Context) ([]clients_models.Client, error) {
+	search := c.QueryParam("name")
+	if search == "" {
+		return nil, errors.New("No se ha ingresado un nombre para buscar")
+	}
+	clients, err := clients.SearchClients(search)
+	if err != nil {
+		return nil, err
+	}
+	return clients, nil
 }
