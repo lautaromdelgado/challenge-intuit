@@ -13,4 +13,7 @@ func ClientRoutes(e *echo.Echo) {
 
 	// POST
 	e.POST("/clients/create", ClientsController.CreateClient) // Crear un cliente
+
+	// PUT
+	e.PUT("/clients/update/:id", ClientsController.UpdateClient) // Actualizar un cliente
 }

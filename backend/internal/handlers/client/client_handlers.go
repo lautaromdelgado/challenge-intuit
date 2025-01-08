@@ -72,3 +72,18 @@ func CreateClient(c echo.Context) error {
 		Message: "Client created successfully",
 	})
 }
+
+// UpdateClient actualiza un cliente
+func UpdateClient(c echo.Context) error {
+	err := clients_services.UpdateClient(c) // Actualizar un cliente
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, ResponseMessage{
+			Status:  "error",
+			Message: "Error updating client: " + err.Error(),
+		})
+	}
+	return c.JSON(http.StatusOK, ResponseMessage{
+		Status:  "success",
+		Message: "Client updated successfully",
+	})
+}

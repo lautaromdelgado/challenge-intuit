@@ -5,7 +5,10 @@ import (
 	domicilio_models "challenge-intuit/internal/models/domicilio"                 // Importar el modelo de domicilio
 	nombres_apellidos_models "challenge-intuit/internal/models/nombres_apellidos" // Importar el modelo de nombres y apellidos
 	clients "challenge-intuit/internal/repositories/client"                       // Importar el repositorio de clientes
+	utils "challenge-intuit/utils"                                                // Importar el paquete de utilidades
+
 	"log"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -98,4 +101,114 @@ func CreateNombresApellidos(nombresApellidos *nombres_apellidos_models.NombresAp
 		return nil, err
 	}
 	return nombresApellidos, nil
+}
+
+// UpdateClient actualiza un cliente
+func UpdateClient(c echo.Context) error {
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam) // Convertir el ID a entero
+	if err != nil {
+		return err
+	}
+
+	clientDB, err := GetClientByID(uint(id)) // Obtener el cliente de la base de datos
+	if err != nil {
+		return err
+	}
+
+	var clientNew clients_models.Client // Estructura temporal para el request
+	if err := c.Bind(&clientNew); err != nil {
+		return err
+	}
+
+	if !utils.IsEmptyDomicilio(&clientNew.Domicilio) { // Si el domicilio no está vacío
+		if clientNew.Domicilio.Calle != "" {
+			clientDB.Domicilio.Calle = clientNew.Domicilio.Calle
+		}
+		if clientNew.Domicilio.Numero != "" {
+			clientDB.Domicilio.Numero = clientNew.Domicilio.Numero
+		}
+		if clientNew.Domicilio.Piso != "" {
+			clientDB.Domicilio.Piso = clientNew.Domicilio.Piso
+		}
+		if clientNew.Domicilio.Departamento != "" {
+			clientDB.Domicilio.Departamento = clientNew.Domicilio.Departamento
+		}
+		if clientNew.Domicilio.Ciudad != "" {
+			clientDB.Domicilio.Ciudad = clientNew.Domicilio.Ciudad
+		}
+		if clientNew.Domicilio.Provincia != "" {
+			clientDB.Domicilio.Provincia = clientNew.Domicilio.Provincia
+		}
+		if clientNew.Domicilio.Codigo_postal != "" {
+			clientDB.Domicilio.Codigo_postal = clientNew.Domicilio.Codigo_postal
+		}
+		if clientNew.Domicilio.Pais != "" {
+			clientDB.Domicilio.Pais = clientNew.Domicilio.Pais
+		}
+
+		err := clients.UpdateDomicilio(clientDB.Domicilio.ID, &clientDB.Domicilio) // Actualizar el domicilio
+		if err != nil {
+			return err
+		}
+	}
+
+	if !utils.IsEmptyNombresApellidos(&clientNew.NombresApellidos) { // Si el nombre y apellido no está vacío
+		if clientNew.NombresApellidos.First_name != "" {
+			clientDB.NombresApellidos.First_name = clientNew.NombresApellidos.First_name
+		}
+		if clientNew.NombresApellidos.Second_name != "" {
+			clientDB.NombresApellidos.Second_name = clientNew.NombresApellidos.Second_name
+		}
+		if clientNew.NombresApellidos.First_surname != "" {
+			clientDB.NombresApellidos.First_surname = clientNew.NombresApellidos.First_surname
+		}
+		if clientNew.NombresApellidos.Second_surname != "" {
+			clientDB.NombresApellidos.Second_surname = clientNew.NombresApellidos.Second_surname
+		}
+
+		err := clients.UpdateNombreApellido(clientDB.NombresApellidos.ID, &clientNew.NombresApellidos) // Actualizar el nombre y apellido
+		if err != nil {
+			return err
+		}
+	}
+
+	if clientNew.Fecha_de_nacimiento != nil {
+		clientDB.Fecha_de_nacimiento = clientNew.Fecha_de_nacimiento
+	}
+	if clientNew.Cuit != "" {
+		clientDB.Cuit = clientNew.Cuit
+	}
+	if clientNew.Telefono != "" {
+		clientDB.Telefono = clientNew.Telefono
+	}
+	if clientNew.Email != "" {
+		clientDB.Email = clientNew.Email
+	}
+
+	err = clients.UpdateClient(clientDB) // Actualizar el cliente
+	if err != nil {
+		return nil
+	}
+
+	return nil
+}
+
+// UpdateDomicilio actualiza un domicilio
+func UpdateDomicilio(id uint, domicilio *domicilio_models.Domicilio) error {
+	// Actualizar el domicilio
+	err := clients.UpdateDomicilio(id, domicilio)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// UpdateNombresApellidos actualiza un nombre y apellido
+func UpdateNombresApellidos(id uint, nombresApellidos *nombres_apellidos_models.NombresApellidos) error {
+	err := clients.UpdateNombreApellido(id, nombresApellidos)
+	if err != nil {
+		return err
+	}
+	return nil
 }

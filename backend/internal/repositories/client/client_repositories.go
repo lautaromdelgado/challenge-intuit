@@ -5,6 +5,7 @@ import (
 	clients_models "challenge-intuit/internal/models/clients"             // Importar el modelo de clientes
 	domicilio_models "challenge-intuit/internal/models/domicilio"         // Importar el modelo de domicilio
 	nombres_apellido "challenge-intuit/internal/models/nombres_apellidos" // Importar el modelo de nombres y apellidos
+	"errors"
 )
 
 // OBTENER CLIENTE
@@ -52,6 +53,33 @@ func CreateNombreApellido(nombreApellido *nombres_apellido.NombresApellidos) err
 	db := database.GetDB()
 	if err := db.Save(&nombreApellido).Error; err != nil {
 		return err
+	}
+	return nil
+}
+
+// UpdateClient actualiza un cliente
+func UpdateClient(client *clients_models.Client) error {
+	db := database.GetDB()
+	if err := db.Save(&client); err != nil {
+		return errors.New("Error al actualizar el cliente") // Error personalizado
+	}
+	return nil
+}
+
+// UpdateDomicilio actualiza un domicilio
+func UpdateDomicilio(id uint, domicilio *domicilio_models.Domicilio) error {
+	db := database.GetDB()
+	if err := db.Model(&domicilio).Where("id = ?", id).Updates(&domicilio).Error; err != nil {
+		return errors.New("Error al actualizar el domicilio") // Error personalizado
+	}
+	return nil
+}
+
+// UpdateNombreApellido actualiza un nombre y apellido
+func UpdateNombreApellido(id uint, nombreApellido *nombres_apellido.NombresApellidos) error {
+	db := database.GetDB()
+	if err := db.Model(&nombreApellido).Where("id = ?", id).Updates(&nombreApellido).Error; err != nil {
+		return errors.New("Error al actualizar el nombre y apellido") // Error personalizado
 	}
 	return nil
 }
