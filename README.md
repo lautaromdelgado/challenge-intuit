@@ -1,6 +1,6 @@
 # Challenge Intuit Backend
 
-Este proyecto es un backend desarrollado en **Golang** utilizando el framework **Echo** y **GORM** como ORM para la interacción con la base de datos MySQL. Su objetivo es gestionar clientes, incluyendo sus domicilios y nombres completos, mediante endpoints RESTful.
+Este proyecto es un backend desarrollado en **Golang** con el framework **Echo** y utiliza **GORM** como ORM para la interacción con la base de datos MySQL. El propósito del sistema es gestionar clientes, incluyendo sus domicilios y nombres completos, mediante un conjunto de endpoints RESTful.
 
 ## **Tecnologías utilizadas**
 
@@ -17,18 +17,32 @@ backend/
 ├── cmd
 │   └── server.go              # Inicialización del servidor Echo
 ├── config
-│   └── .env                   # Variables de entorno
+│   └── .env                   # Archivo de configuración de variables de entorno
 ├── database
-│   └── database.go            # Conexión a la base de datos
+│   ├── script
+│   │   └── database.go        # Conexión y configuración de la base de datos
 ├── internal
-│   ├── handlers               # Controladores de las solicitudes
-│   ├── models                 # Modelos de datos
-│   ├── repositories           # Repositorios de acceso a la base de datos
-│   ├── services               # Lógica de negocio
-│   └── utils                  # Funciones auxiliares
+│   ├── handlers
+│   │   └── client
+│   │       └── client_handlers.go  # Controladores para manejar las solicitudes
+│   ├── models
+│   │   ├── clients
+│   │   │   └── clients_models.go   # Modelos de clientes
+│   │   ├── domicilio
+│   │   │   └── domicilio_models.go # Modelos de domicilio
+│   │   └── nombres_apellidos
+│   │       └── nombres_apellidos_models.go  # Modelos de nombres y apellidos
+│   ├── repositories
+│   │   └── client
+│   │       └── client_repositories.go  # Repositorios para acceso a la base de datos
+│   ├── services
+│   │   └── client
+│   │       └── client_services.go      # Lógica de negocio y servicios
+│   └── utils
+│       └── utils.go                # Funciones auxiliares (validaciones)
 ├── routes
-│   └── routes.go              # Definición de rutas
-└── go.mod                     # Archivo de módulos de Go
+│   └── routes.go                  # Definición de rutas del servidor
+└── go.mod                         # Archivo de módulos de Go
 ```
 
 ## **Instalación y ejecución**
@@ -69,10 +83,10 @@ backend/
 - **URL:** `/clients/search`
 - **Método:** `GET`
 - **Descripción:** Busca clientes cuyo nombre o apellido coincidan parcialmente con el parámetro de búsqueda proporcionado.
-- **Parámetros de query:**
-  - `name`: Texto a buscar en nombres o apellidos.
+- **Query Param:**
+  - `name`: Texto a buscar en los nombres o apellidos.
 - **Ejemplo:**
-  ```bash
+  ```
   GET /clients/search?name=Juan
   ```
 - **Respuesta:**
@@ -93,7 +107,7 @@ backend/
         "domicilio": {
           "calle": "Figueroa Alcorta",
           "numero": "4880",
-          "ciudad": "Autónoma de Buenos Aires",
+          "ciudad": "Autonoma de Buenos Aires",
           "provincia": "Buenos Aires",
           "codigo_postal": "S100",
           "pais": "Argentina"
@@ -134,7 +148,7 @@ backend/
     "domicilio": {
       "calle": "Figueroa Alcorta",
       "numero": "4880",
-      "ciudad": "Autónoma de Buenos Aires",
+      "ciudad": "Autonoma de Buenos Aires",
       "provincia": "Buenos Aires",
       "codigo_postal": "S100",
       "pais": "Argentina"
@@ -159,8 +173,20 @@ backend/
   }
   ```
 
+#### **Eliminar un cliente**
+- **URL:** `/clients/delete/:id`
+- **Método:** `PUT`
+- **Descripción:** Elimina un cliente de manera lógica, marcando el campo `eliminado_el` con la fecha y hora actual.
+- **Respuesta:**
+  ```json
+  {
+    "status": "success",
+    "message": "Client deleted successfully"
+  }
+  ```
+
 #### **Respuestas posibles**
-- **200 OK:** Cliente actualizado correctamente.
+- **200 OK:** Operación realizada correctamente.
 - **400 Bad Request:** Error en los datos enviados o el cliente no existe.
 
 ## **Funciones auxiliares (utils)**
@@ -171,7 +197,6 @@ Las funciones auxiliares en `utils/utils.go` verifican si las estructuras anidad
 - `IsEmptyNombresApellidos`: Verifica si los campos de la estructura `NombresApellidos` están vacíos.
 
 ## **Pruebas**
-
 Para probar el funcionamiento del backend, se recomienda utilizar herramientas como **Postman** o **cURL**. Se incluyen tres ejemplos de JSON para pruebas:
 
 ### **1. JSON con todos los campos**
@@ -186,7 +211,7 @@ Para probar el funcionamiento del backend, se recomienda utilizar herramientas c
   "domicilio": {
     "calle": "Av. Libertador",
     "numero": "1010",
-    "ciudad": "Autónoma de Buenos Aires",
+    "ciudad": "Autonoma de Buenos Aires",
     "provincia": "Buenos Aires",
     "codigo_postal": "C100",
     "pais": "Argentina"

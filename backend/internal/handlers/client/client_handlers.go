@@ -108,3 +108,18 @@ func SearchClients(c echo.Context) error {
 		TotalClients: &clientsTotal,
 	})
 }
+
+// DeleteClient elimina un cliente
+func DeleteClient(c echo.Context) error {
+	err := clients_services.DeleteClient(c) // Eliminar un cliente
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, ResponseMessage{
+			Status:  "error",
+			Message: "Error deleting client: " + err.Error(),
+		})
+	}
+	return c.JSON(http.StatusOK, ResponseMessage{
+		Status:  "success",
+		Message: "Client deleted successfully",
+	})
+}

@@ -7,6 +7,7 @@ import (
 	clients "challenge-intuit/internal/repositories/client"                       // Importar el repositorio de clientes
 	utils "challenge-intuit/utils"                                                // Importar el paquete de utilidades
 	"errors"
+	"time"
 
 	"log"
 	"strconv"
@@ -219,4 +220,28 @@ func SearchClient(c echo.Context) ([]clients_models.Client, error) {
 		return nil, err
 	}
 	return clients, nil
+}
+
+// DeleteClient eliminado lógico de un cliente
+func DeleteClient(c echo.Context) error {
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		return err
+	}
+
+	client, err := clients.GetClientByID(uint(id)) // Obtener el cliente
+	if err != nil {
+		return errors.New("Cliente no encontrado")
+	}
+
+	timeNow := time.Now()          // Obtener la fecha y hora actual
+	client.Eliminado_el = &timeNow // Asignar la fecha y hora actual al campo "eliminado_el"
+
+	err = clients.DeleteClient(client) // Eliminar el cliente
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

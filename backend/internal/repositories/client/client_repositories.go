@@ -100,3 +100,12 @@ func SearchClients(search string) ([]clients_models.Client, error) {
 	}
 	return clients, nil
 }
+
+// DeleteClient eliminar de forma lógica un cliente
+func DeleteClient(client *clients_models.Client) error {
+	db := database.GetDB()
+	if err := db.Model(&client).Where("id = ?", client.ID).Update("eliminado_el", client.Eliminado_el).Error; err != nil {
+		return errors.New("Error al eliminar el cliente")
+	}
+	return nil
+}

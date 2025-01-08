@@ -17,4 +17,5 @@ func ClientRoutes(e *echo.Echo) {
 
 	// PUT
 	e.PUT("/clients/update/:id", ClientsController.UpdateClient) // Actualizar un cliente
+	e.PUT("/clients/delete/:id", ClientsController.DeleteClient) // Eliminar un cliente
 }
