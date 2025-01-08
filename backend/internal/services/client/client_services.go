@@ -17,7 +17,6 @@ type ResponseMessage struct {
 	Message string `json:"message,omitempty"`
 }
 
-// FUNCIONES GET
 // GetClientByID obtiene un cliente mediante el ID
 func GetClientByID(clientid uint) (*clients_models.Client, error) {
 	client, err := clients.GetClientByID(clientid)
@@ -36,47 +35,7 @@ func GetAllClients() ([]clients_models.Client, error) {
 	return clients, nil
 }
 
-// FUNCIONES POST
 // CreateClient crea un cliente
-// func CreateClient(c echo.Context) error {
-// 	var req clients_models.Client // Estructura temporal para el request
-
-// 	// Enlazar los datos del cliente
-// 	if err := c.Bind(&req); err != nil {
-// 		return err
-// 	}
-
-// 	// Crear el domicilio
-// 	newDomicilio, err := CreateDomicilio(&req.Domicilio)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	// Crear el nombre y apellido
-// 	newNombresApellidos, err := CreateNombresApellidos(&req.NombresApellidos)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	// Crear el cliente
-// 	newClient := clients_models.Client{
-// 		ID_Nombres_Apellidos: newNombresApellidos.ID,
-// 		ID_Domicilio:         newDomicilio.ID,
-// 		Fecha_de_nacimiento:  req.Fecha_de_nacimiento,
-// 		Cuit:                 req.Cuit,
-// 		Telefono:             req.Telefono,
-// 		Email:                req.Email,
-// 	}
-
-// 	// Crear el cliente
-// 	err = clients.CreateClient(&newClient)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	return nil
-// }
-
 func CreateClient(c echo.Context) error {
 	var req clients_models.Client // Estructura temporal para el request
 
