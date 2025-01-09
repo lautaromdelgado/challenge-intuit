@@ -246,7 +246,7 @@ ALTER TABLE clientes ADD COLUMN eliminado_el TIMESTAMP DEFAULT NULL;
       "first_surname": "Pérez",
       "second_surname": ""
     },
-    "fecha_de_nacimiento": "1990-05-15",
+    "fecha_de_nacimiento": "2002-03-25T15:04:05Z",
     "cuit": "20-12345678-9",
     "domicilio": {
       "calle": "Figueroa Alcorta",
