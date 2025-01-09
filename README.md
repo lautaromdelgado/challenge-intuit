@@ -167,7 +167,7 @@ ALTER TABLE clientes ADD COLUMN eliminado_el TIMESTAMP DEFAULT NULL;
           "second_surname": "García"
         },
         "fecha_de_nacimiento": "1990-05-15",
-        "cuit": "20-12345678-9",
+        "cuit": "20123456789",
         "domicilio": {
           "calle": "Figueroa Alcorta",
           "numero": "4880",
@@ -213,7 +213,7 @@ ALTER TABLE clientes ADD COLUMN eliminado_el TIMESTAMP DEFAULT NULL;
           "first_surname": "González"
         },
         "fecha_de_nacimiento": "1988-11-20",
-        "cuit": "27-98765432-1",
+        "cuit": "27987654321",
         "domicilio": {
           "calle": "Av. Belgrano",
           "numero": "123",
@@ -247,7 +247,7 @@ ALTER TABLE clientes ADD COLUMN eliminado_el TIMESTAMP DEFAULT NULL;
       "second_surname": ""
     },
     "fecha_de_nacimiento": "2002-03-25T15:04:05Z",
-    "cuit": "20-12345678-9",
+    "cuit": "20123456789",
     "domicilio": {
       "calle": "Figueroa Alcorta",
       "numero": "4880",
@@ -303,7 +303,7 @@ Para probar el funcionamiento del backend, se recomienda utilizar herramientas c
     "first_surname": "López"
   },
   "fecha_de_nacimiento": "1985-03-20",
-  "cuit": "23-98765432-1",
+  "cuit": "23987654321",
   "domicilio": {
     "calle": "Av. Libertador",
     "numero": "1010",
