@@ -45,6 +45,70 @@ backend/
 └── go.mod                         # Archivo de módulos de Go
 ```
 
+## **Estructura de la base de datos**
+
+```sql
+-- CREAR Y USAR BASE DE DATOS
+CREATE DATABASE challenge;
+USE challenge;
+
+-- TABLA NOMBRES Y APELLIDOS
+CREATE TABLE nombres_apellidos_client (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    second_name VARCHAR(50) DEFAULT NULL,
+    first_surname VARCHAR(50) NOT NULL,
+    second_surname VARCHAR(50) DEFAULT NULL
+);
+
+-- TABLA DOMICILIO
+CREATE TABLE domicilio (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    calle VARCHAR(55) NOT NULL,
+    numero VARCHAR(10) NOT NULL,
+    piso VARCHAR(10) DEFAULT NULL,
+    departamento VARCHAR(10) DEFAULT NULL,
+    ciudad VARCHAR(50) NOT NULL,
+    provincia VARCHAR(50) NOT NULL,
+    codigo_postal VARCHAR(10) NOT NULL,
+    pais VARCHAR(50) NOT NULL
+);
+
+-- TABLA CLIENTES
+CREATE TABLE clientes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_nombres_apellidos INT UNIQUE,
+    fecha_de_nacimiento DATE NOT NULL,
+    cuit BIGINT NOT NULL,
+    id_domicilio INT UNIQUE,
+    telefono VARCHAR(20) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    FOREIGN KEY (id_nombres_apellidos) REFERENCES nombres_apellidos_client(id),
+    FOREIGN KEY (id_domicilio) REFERENCES domicilio(id)
+);
+
+-- AGREGAR COLUMNA DE ALTA Y BAJA
+ALTER TABLE clientes ADD COLUMN creado_el TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE clientes ADD COLUMN eliminado_el TIMESTAMP DEFAULT NULL;
+```
+
+### **Descripción de la estructura**
+
+1. **Base de datos:** La base de datos se llama `challenge` y contiene tres tablas principales:
+   - **nombres_apellidos_client:** Almacena los nombres y apellidos de los clientes, permitiendo tener nombres y apellidos compuestos o dobles.
+   - **domicilio:** Guarda la información del domicilio de los clientes, incluyendo calle, número, piso, departamento, ciudad, provincia, código postal y país.
+   - **clientes:** Contiene los datos generales de los clientes, como fecha de nacimiento, CUIT, teléfono y correo electrónico. Además, se relaciona con las tablas `nombres_apellidos_client` y `domicilio` mediante claves foráneas.
+
+2. **Relaciones:**
+   - La tabla `clientes` tiene dos claves foráneas:
+     - `id_nombres_apellidos` hace referencia a la tabla `nombres_apellidos_client`.
+     - `id_domicilio` hace referencia a la tabla `domicilio`.
+
+3. **Columnas adicionales:**
+   - Se agregaron dos columnas adicionales en la tabla `clientes`:
+     - `creado_el`: Registra la fecha y hora en que se creó el registro.
+     - `eliminado_el`: Permite registrar la fecha y hora en que un cliente fue eliminado de manera lógica.
+
 ## **Instalación y ejecución**
 
 1. **Clonar el repositorio:**
@@ -276,4 +340,3 @@ Para probar el funcionamiento del backend, se recomienda utilizar herramientas c
 
 ## **Licencia**
 Este proyecto está desarrollado por www.linkedin.com/in/lautaromdelgado.
-
