@@ -245,3 +245,12 @@ func DeleteClient(c echo.Context) error {
 
 	return nil
 }
+
+// GetClientsDeleted obtiene los clientes eliminados
+func GetClientsDeleted() ([]clients_models.Client, error) {
+	clients, err := clients.GetClientsDeleted() // Obtener los clientes eliminados
+	if err != nil {
+		return nil, err
+	}
+	return clients, nil // Retornar los clientes eliminados
+}

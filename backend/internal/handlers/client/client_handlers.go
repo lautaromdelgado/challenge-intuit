@@ -17,7 +17,8 @@ type ResponseMessage struct {
 }
 
 type TotalClients struct {
-	Total int `json:"totalclients,omitempty"` // Total de clientes
+	Total        int `json:"totalclients,omitempty"` // Total de clientes
+	TotalDeleted int `json:"totaldeleted,omitempty"` // Total de clientes eliminados
 }
 
 // GetClientByID obtiene un cliente mediante su ID
@@ -121,5 +122,26 @@ func DeleteClient(c echo.Context) error {
 	return c.JSON(http.StatusOK, ResponseMessage{
 		Status:  "success",
 		Message: "Client deleted successfully",
+	})
+}
+
+// GetClientsDeleted obtiene los clientes eliminados
+func GetClientsDeleted(c echo.Context) error {
+	clients, err := clients_services.GetClientsDeleted() // Obtener los clientes eliminados
+	if err != nil {
+		return c.JSON(http.StatusNotFound, ResponseMessage{
+			Status:  "error",
+			Message: "Clients not found: " + err.Error(),
+		})
+	}
+
+	clientsTotal := TotalClients{ // Total de clientes
+		TotalDeleted: len(clients),
+	}
+
+	return c.JSON(http.StatusOK, ResponseMessage{
+		Status:       "success",
+		Data:         clients,
+		TotalClients: &clientsTotal,
 	})
 }

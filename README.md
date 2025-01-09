@@ -131,6 +131,44 @@ backend/
 - **Descripción:** Devuelve una lista de todos los clientes registrados que no han sido eliminados.
 - **Detalles de implementación:** Se ha implementado un filtro en la base de datos que excluye a los clientes eliminados, es decir, aquellos cuyo campo `eliminado_el` no es nulo.
 
+#### **Obtener clientes eliminados**
+- **URL:** `/clients/deleted`
+- **Método:** `GET`
+- **Descripción:** Devuelve una lista de todos los clientes que han sido eliminados lógicamente.
+- **Detalles de implementación:** Se ha implementado un filtro en la base de datos que incluye solo a los clientes eliminados, es decir, aquellos cuyo campo `eliminado_el` no es nulo.
+
+- **Respuesta:**
+  ```json
+  {
+    "status": "success",
+    "data": [
+      {
+        "id": 2,
+        "nombres_apellidos": {
+          "first_name": "María",
+          "first_surname": "González"
+        },
+        "fecha_de_nacimiento": "1988-11-20",
+        "cuit": "27-98765432-1",
+        "domicilio": {
+          "calle": "Av. Belgrano",
+          "numero": "123",
+          "ciudad": "Rosario",
+          "provincia": "Santa Fe",
+          "codigo_postal": "S200",
+          "pais": "Argentina"
+        },
+        "telefono": "9876543210",
+        "email": "maria.gonzalez@example.com",
+        "eliminado_el": "2025-01-05T15:30:00Z"
+      }
+    ],
+    "totalClients": {
+      "totaldeleted": 1
+    }
+  }
+  ```
+
 #### **Crear un cliente**
 - **URL:** `/clients/create`
 - **Método:** `POST`

@@ -109,3 +109,16 @@ func DeleteClient(client *clients_models.Client) error {
 	}
 	return nil
 }
+
+// GetClientsDeleted obtiene los clientes eliminados
+func GetClientsDeleted() ([]clients_models.Client, error) {
+	db := database.GetDB()
+	clients := []clients_models.Client{}
+	// Consulta para obtener todos los clientes que han sido eliminados
+	// (aquellos cuyo campo 'eliminado_el' no es nulo).
+	// Además, precarga las relaciones 'Domicilio' y 'NombresApellidos'
+	if err := db.Preload("Domicilio").Preload("NombresApellidos").Where("eliminado_el IS NOT NULL").Find(&clients).Error; err != nil {
+		return nil, err
+	}
+	return clients, nil // Devuelve los clientes eliminados
+}

@@ -8,9 +8,10 @@ import (
 
 func ClientRoutes(e *echo.Echo) {
 	// GET
-	e.GET("/clients/:id", ClientsController.GetClientByID)    // Obtener cliente mediante el ID
-	e.GET("/clients", ClientsController.GetAllClients)        // Obtener todos los clientes
-	e.GET("/clients/search", ClientsController.SearchClients) // Buscar clientes
+	e.GET("/clients/:id", ClientsController.GetClientByID)         // Obtener cliente mediante el ID
+	e.GET("/clients", ClientsController.GetAllClients)             // Obtener todos los clientes
+	e.GET("/clients/search", ClientsController.SearchClients)      // Buscar clientes
+	e.GET("/clients/deleted", ClientsController.GetClientsDeleted) // Obtener clientes eliminados
 
 	// POST
 	e.POST("/clients/create", ClientsController.CreateClient) // Crear un cliente
