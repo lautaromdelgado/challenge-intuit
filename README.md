@@ -340,3 +340,4 @@ Para probar el funcionamiento del backend, se recomienda utilizar herramientas c
 
 ## **Licencia**
 Este proyecto está desarrollado por www.linkedin.com/in/lautaromdelgado.
+Link del repositorio: https://github.com/lautaromdelgado/challenge-intuit
