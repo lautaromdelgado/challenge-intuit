@@ -1,6 +1,6 @@
 # Challenge Intuit Backend
 
-Este proyecto es un backend desarrollado en **Golang** con el framework **Echo** y utiliza **GORM** como ORM para la interacción con la base de datos MySQL. El propósito del sistema es gestionar clientes, incluyendo sus domicilios y nombres completos, mediante un conjunto de endpoints RESTful.
+Este proyecto es un backend desarrollado en **Golang** utilizando el framework **Echo** y **GORM** como ORM para la gestión de la base de datos MySQL. El sistema permite la gestión de clientes, sus domicilios y sus nombres completos a través de un conjunto de endpoints RESTful.
 
 ## **Tecnologías utilizadas**
 
@@ -8,41 +8,44 @@ Este proyecto es un backend desarrollado en **Golang** con el framework **Echo**
 - **Framework:** Echo
 - **ORM:** GORM
 - **Base de datos:** MySQL
-- **Gestión de dependencias:** Go Modules
+- **Gestor de dependencias:** Go Modules
 
 ## **Estructura del proyecto**
 
-```
+```plaintext
 backend/
 ├── cmd
-│   └── server.go              # Inicialización del servidor Echo
+│   └── server.go                         # Inicialización del servidor Echo
 ├── config
-│   └── .env                   # Archivo de configuración de variables de entorno
+│   └── .env                              # Variables de entorno
 ├── database
-│   ├── script
-│   │   └── database.go        # Conexión y configuración de la base de datos
+│   └── script
+│       └── database.go                   # Conexión y configuración de la base de datos
 ├── internal
 │   ├── handlers
 │   │   └── client
-│   │       └── client_handlers.go  # Controladores para manejar las solicitudes
+│   │       └── client_handlers.go        # Controladores de las solicitudes REST
 │   ├── models
 │   │   ├── clients
-│   │   │   └── clients_models.go   # Modelos de clientes
+│   │   │   └── clients_models.go         # Modelos de clientes
 │   │   ├── domicilio
-│   │   │   └── domicilio_models.go # Modelos de domicilio
+│   │   │   └── domicilio_models.go       # Modelos de domicilio
 │   │   └── nombres_apellidos
 │   │       └── nombres_apellidos_models.go  # Modelos de nombres y apellidos
 │   ├── repositories
 │   │   └── client
-│   │       └── client_repositories.go  # Repositorios para acceso a la base de datos
+│   │       └── client_repositories.go    # Repositorios de clientes
 │   ├── services
 │   │   └── client
-│   │       └── client_services.go      # Lógica de negocio y servicios
+│   │       └── client_services.go        # Lógica de negocio y servicios
 │   └── utils
-│       └── utils.go                # Funciones auxiliares (validaciones)
+│       └── UpdateClient.go               # Funciones auxiliares para actualizaciones
 ├── routes
-│   └── routes.go                  # Definición de rutas del servidor
-└── go.mod                         # Archivo de módulos de Go
+│   ├── clients_routes.go                 # Definición de rutas de clientes
+│   └── routes.go                         # Configuración de rutas del servidor
+├── go.mod                                # Archivo de módulos de Go
+├── go.sum                                # Suma de verificación de módulos
+└── README.md                             # Documentación del proyecto
 ```
 
 ## **Estructura de la base de datos**
@@ -52,7 +55,7 @@ backend/
 CREATE DATABASE challenge;
 USE challenge;
 
--- TABLA NOMBRES Y APELLIDOS
+-- TABLA nombres_apellidos_client
 CREATE TABLE nombres_apellidos_client (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
@@ -61,7 +64,7 @@ CREATE TABLE nombres_apellidos_client (
     second_surname VARCHAR(50) DEFAULT NULL
 );
 
--- TABLA DOMICILIO
+-- TABLA domicilio
 CREATE TABLE domicilio (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     calle VARCHAR(55) NOT NULL,
@@ -74,7 +77,7 @@ CREATE TABLE domicilio (
     pais VARCHAR(50) NOT NULL
 );
 
--- TABLA CLIENTES
+-- TABLA clientes
 CREATE TABLE clientes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_nombres_apellidos INT UNIQUE,
@@ -91,23 +94,6 @@ CREATE TABLE clientes (
 ALTER TABLE clientes ADD COLUMN creado_el TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 ALTER TABLE clientes ADD COLUMN eliminado_el TIMESTAMP DEFAULT NULL;
 ```
-
-### **Descripción de la estructura**
-
-1. **Base de datos:** La base de datos se llama `challenge` y contiene tres tablas principales:
-   - **nombres_apellidos_client:** Almacena los nombres y apellidos de los clientes, permitiendo tener nombres y apellidos compuestos o dobles.
-   - **domicilio:** Guarda la información del domicilio de los clientes, incluyendo calle, número, piso, departamento, ciudad, provincia, código postal y país.
-   - **clientes:** Contiene los datos generales de los clientes, como fecha de nacimiento, CUIT, teléfono y correo electrónico. Además, se relaciona con las tablas `nombres_apellidos_client` y `domicilio` mediante claves foráneas.
-
-2. **Relaciones:**
-   - La tabla `clientes` tiene dos claves foráneas:
-     - `id_nombres_apellidos` hace referencia a la tabla `nombres_apellidos_client`.
-     - `id_domicilio` hace referencia a la tabla `domicilio`.
-
-3. **Columnas adicionales:**
-   - Se agregaron dos columnas adicionales en la tabla `clientes`:
-     - `creado_el`: Registra la fecha y hora en que se creó el registro.
-     - `eliminado_el`: Permite registrar la fecha y hora en que un cliente fue eliminado de manera lógica.
 
 ## **Instalación y ejecución**
 
@@ -193,7 +179,6 @@ ALTER TABLE clientes ADD COLUMN eliminado_el TIMESTAMP DEFAULT NULL;
 - **URL:** `/clients`
 - **Método:** `GET`
 - **Descripción:** Devuelve una lista de todos los clientes registrados que no han sido eliminados.
-- **Detalles de implementación:** Se ha implementado un filtro en la base de datos que excluye a los clientes eliminados, es decir, aquellos cuyo campo `eliminado_el` no es nulo.
 
 #### **Obtener clientes eliminados**
 - **URL:** `/clients/deleted`
@@ -231,7 +216,6 @@ ALTER TABLE clientes ADD COLUMN eliminado_el TIMESTAMP DEFAULT NULL;
       "totaldeleted": 1
     }
   }
-  ```
 
 #### **Crear un cliente**
 - **URL:** `/clients/create`
@@ -279,65 +263,8 @@ ALTER TABLE clientes ADD COLUMN eliminado_el TIMESTAMP DEFAULT NULL;
 #### **Eliminar un cliente**
 - **URL:** `/clients/delete/:id`
 - **Método:** `PUT`
-- **Descripción:** Elimina un cliente de manera lógica estableciendo la fecha actual en el campo `eliminado_el`. Esto indica que la cuenta ha sido dada de baja pero permanece en el sistema para propósitos de historial.
-
-#### **Respuestas posibles**
-- **200 OK:** Cliente actualizado o eliminado correctamente.
-- **400 Bad Request:** Error en los datos enviados o el cliente no existe.
-
-## **Funciones auxiliares (utils)**
-
-Las funciones auxiliares en `utils/utils.go` verifican si las estructuras anidadas están vacías antes de proceder a actualizarlas:
-
-- `IsEmptyDomicilio`: Verifica si los campos de la estructura `Domicilio` están vacíos.
-- `IsEmptyNombresApellidos`: Verifica si los campos de la estructura `NombresApellidos` están vacíos.
-
-## **Pruebas**
-Para probar el funcionamiento del backend, se recomienda utilizar herramientas como **Postman** o **cURL**. Se incluyen tres ejemplos de JSON para pruebas:
-
-### **1. JSON con todos los campos**
-```json
-{
-  "nombres_apellidos": {
-    "first_name": "Ana",
-    "first_surname": "López"
-  },
-  "fecha_de_nacimiento": "1985-03-20",
-  "cuit": "23987654321",
-  "domicilio": {
-    "calle": "Av. Libertador",
-    "numero": "1010",
-    "ciudad": "Autonoma de Buenos Aires",
-    "provincia": "Buenos Aires",
-    "codigo_postal": "C100",
-    "pais": "Argentina"
-  },
-  "telefono": "1122334455",
-  "email": "ana.lopez@example.com"
-}
-```
-
-### **2. JSON con pocos cambios**
-```json
-{
-  "telefono": "1231231234"
-}
-```
-
-### **3. JSON con algunos campos actualizados**
-```json
-{
-  "nombres_apellidos": {
-    "first_name": "Luis",
-    "first_surname": "Martínez"
-  },
-  "domicilio": {
-    "calle": "San Martín",
-    "numero": "505"
-  }
-}
-```
+- **Descripción:** Elimina un cliente de manera lógica estableciendo la fecha actual en el campo `eliminado_el`.
 
 ## **Licencia**
-Este proyecto está desarrollado por www.linkedin.com/in/lautaromdelgado.
-Link del repositorio: https://github.com/lautaromdelgado/challenge-intuit
+Este proyecto está desarrollado por [Lautaro M. Delgado](https://www.linkedin.com/in/lautaromdelgado/).
+
